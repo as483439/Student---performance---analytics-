@@ -3,7 +3,7 @@ import numpy as np
 
 Step 1: Load student dataset
 
-df = pd.read_csv("students.csv")
+df = pd.read_csv("Students.csv")
 
 subjects = ["Math", "Python", "AI"]
 
