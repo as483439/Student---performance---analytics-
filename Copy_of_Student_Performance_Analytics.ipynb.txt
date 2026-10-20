@@ -1,0 +1,294 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": [
+        "# Step 1: Import Pandas\n",
+        "import pandas as pd\n",
+        "\n",
+        "# Step 2: Create student data\n",
+        "data = {\n",
+        "    \"Student_ID\": list(range(1, 21)),\n",
+        "    \"Name\": [\n",
+        "        \"Aarav\", \"Vivaan\", \"Aditya\", \"Vihaan\", \"Arjun\",\n",
+        "        \"Reyansh\", \"Muhammad\", \"Sai\", \"Arnav\", \"Krishna\",\n",
+        "        \"Ishaan\", \"Shaurya\", \"Atharv\", \"Ayaan\", \"Dhruv\",\n",
+        "        \"Kabir\", \"Ritvik\", \"Anaya\", \"Diya\", \"Myra\"\n",
+        "    ],\n",
+        "    \"Department\": [\"Math\"] * 20,\n",
+        "    \"Math\": [85,72,90,65,78,88,56,92,70,81,67,95,74,60,83,89,76,91,68,80],\n",
+        "    \"Python\": [90,75,85,70,80,92,60,95,72,84,69,93,78,65,86,88,79,94,71,82],\n",
+        "    \"AI\": [88,78,92,68,75,90,62,96,74,85,70,91,80,66,84,90,77,93,73,86],\n",
+        "    \"Attendance\": [95,88,92,80,85,96,75,98,82,90,78,97,86,79,91,94,84,96,81,89]\n",
+        "}\n",
+        "\n",
+        "# Step 3: Save CSV file\n",
+        "df = pd.DataFrame(data)\n",
+        "df.to_csv(\"/content/Students.csv\", index=False)\n",
+        "\n",
+        "# Step 4: Verify that the file exists\n",
+        "print(\"CSV created:\", __import__(\"os\").path.exists(\"/content/Students.csv\"))\n",
+        "print(\"Total students:\", len(df))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "cWA02vnk3LY1",
+        "outputId": "aeacb6f5-d37d-460d-d159-de11216151bc"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "CSV created: True\n",
+            "Total students: 20\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Student Performance Analytics System\n",
+        "# Project using Python, Pandas and NumPy\n",
+        "\n",
+        "# Step 1: Import required libraries\n",
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "\n",
+        "# Step 2: Load the Students CSV file\n",
+        "df = pd.read_csv(\"/content/Students.csv\")\n",
+        "\n",
+        "# Step 3: Select subjects\n",
+        "subjects = [\"Math\", \"Python\", \"AI\"]\n",
+        "\n",
+        "# Step 4: Calculate total and average marks\n",
+        "df[\"Total\"] = df[subjects].sum(axis=1)\n",
+        "df[\"Average\"] = df[subjects].mean(axis=1)\n",
+        "\n",
+        "# Step 5: Create a function to assign grades\n",
+        "def get_grade(avg):\n",
+        "    if avg >= 90:\n",
+        "        return \"A+\"\n",
+        "    elif avg >= 80:\n",
+        "        return \"A\"\n",
+        "    elif avg >= 70:\n",
+        "        return \"B\"\n",
+        "    elif avg >= 60:\n",
+        "        return \"C\"\n",
+        "    elif avg >= 40:\n",
+        "        return \"D\"\n",
+        "    else:\n",
+        "        return \"F\"\n",
+        "\n",
+        "# Step 6: Assign grades to students\n",
+        "df[\"Grade\"] = df[\"Average\"].apply(get_grade)\n",
+        "\n",
+        "# Step 7: Determine pass or fail\n",
+        "# A student passes if every subject mark is at least 40\n",
+        "df[\"Result\"] = np.where(\n",
+        "    (df[subjects] >= 40).all(axis=1),\n",
+        "    \"Pass\",\n",
+        "    \"Fail\"\n",
+        ")\n",
+        "\n",
+        "# Step 8: Display student performance\n",
+        "print(\"===== STUDENT PERFORMANCE ANALYTICS =====\")\n",
+        "print(df.to_string(index=False))\n",
+        "\n",
+        "# Step 9: Display class statistics\n",
+        "print(\"\\n===== CLASS STATISTICS =====\")\n",
+        "print(\"Total Students:\", len(df))\n",
+        "print(\"Class Average:\", round(df[\"Average\"].mean(), 2))\n",
+        "print(\"Highest Average:\", round(df[\"Average\"].max(), 2))\n",
+        "print(\"Lowest Average:\", round(df[\"Average\"].min(), 2))\n",
+        "print(\"Students Passed:\", (df[\"Result\"] == \"Pass\").sum())\n",
+        "print(\"Students Failed:\", (df[\"Result\"] == \"Fail\").sum())\n",
+        "\n",
+        "# Step 10: Display subject-wise averages\n",
+        "print(\"\\n===== SUBJECT-WISE AVERAGES =====\")\n",
+        "print(df[subjects].mean().round(2))\n",
+        "\n",
+        "# Step 11: Display the top 3 students\n",
+        "print(\"\\n===== TOP 3 STUDENTS =====\")\n",
+        "print(\n",
+        "    df.nlargest(3, \"Average\")[\n",
+        "        [\"Name\", \"Average\", \"Grade\"]\n",
+        "    ].to_string(index=False)\n",
+        ")\n",
+        "\n",
+        "# Step 12: Display attendance analysis\n",
+        "print(\"\\n===== ATTENDANCE ANALYSIS =====\")\n",
+        "print(\"Average Attendance:\",\n",
+        "      round(df[\"Attendance\"].mean(), 2))\n",
+        "\n",
+        "# Step 13: Finish the project\n",
+        "print(\"\\nProject analysis completed successfully!\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "jC_gpXs6_cU0",
+        "outputId": "6600254b-1d08-4a4f-a7b1-10925a589fd3"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "===== STUDENT PERFORMANCE ANALYTICS =====\n",
+            " Student_ID     Name Department  Math  Python  AI  Attendance  Total   Average Grade Result\n",
+            "          1    Aarav       Math    85      90  88          95    263 87.666667     A   Pass\n",
+            "          2   Vivaan       Math    72      75  78          88    225 75.000000     B   Pass\n",
+            "          3   Aditya       Math    90      85  92          92    267 89.000000     A   Pass\n",
+            "          4   Vihaan       Math    65      70  68          80    203 67.666667     C   Pass\n",
+            "          5    Arjun       Math    78      80  75          85    233 77.666667     B   Pass\n",
+            "          6  Reyansh       Math    88      92  90          96    270 90.000000    A+   Pass\n",
+            "          7 Muhammad       Math    56      60  62          75    178 59.333333     D   Pass\n",
+            "          8      Sai       Math    92      95  96          98    283 94.333333    A+   Pass\n",
+            "          9    Arnav       Math    70      72  74          82    216 72.000000     B   Pass\n",
+            "         10  Krishna       Math    81      84  85          90    250 83.333333     A   Pass\n",
+            "         11   Ishaan       Math    67      69  70          78    206 68.666667     C   Pass\n",
+            "         12  Shaurya       Math    95      93  91          97    279 93.000000    A+   Pass\n",
+            "         13   Atharv       Math    74      78  80          86    232 77.333333     B   Pass\n",
+            "         14    Ayaan       Math    60      65  66          79    191 63.666667     C   Pass\n",
+            "         15    Dhruv       Math    83      86  84          91    253 84.333333     A   Pass\n",
+            "         16    Kabir       Math    89      88  90          94    267 89.000000     A   Pass\n",
+            "         17   Ritvik       Math    76      79  77          84    232 77.333333     B   Pass\n",
+            "         18    Anaya       Math    91      94  93          96    278 92.666667    A+   Pass\n",
+            "         19     Diya       Math    68      71  73          81    212 70.666667     B   Pass\n",
+            "         20     Myra       Math    80      82  86          89    248 82.666667     A   Pass\n",
+            "\n",
+            "===== CLASS STATISTICS =====\n",
+            "Total Students: 20\n",
+            "Class Average: 79.77\n",
+            "Highest Average: 94.33\n",
+            "Lowest Average: 59.33\n",
+            "Students Passed: 20\n",
+            "Students Failed: 0\n",
+            "\n",
+            "===== SUBJECT-WISE AVERAGES =====\n",
+            "Math      78.0\n",
+            "Python    80.4\n",
+            "AI        80.9\n",
+            "dtype: float64\n",
+            "\n",
+            "===== TOP 3 STUDENTS =====\n",
+            "   Name   Average Grade\n",
+            "    Sai 94.333333    A+\n",
+            "Shaurya 93.000000    A+\n",
+            "  Anaya 92.666667    A+\n",
+            "\n",
+            "===== ATTENDANCE ANALYSIS =====\n",
+            "Average Attendance: 87.8\n",
+            "\n",
+            "Project analysis completed successfully!\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Download Students.csv to your phone\n",
+        "from google.colab import files\n",
+        "\n",
+        "files.download(\"/content/Students.csv\")"
+      ],
+      "metadata": {
+        "id": "LpEVonSk_2IS",
+        "outputId": "e2a4d2cc-51c5-4665-9d6f-e2b6278d97ea",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 17
+        }
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<IPython.core.display.Javascript object>"
+            ],
+            "application/javascript": [
+              "\n",
+              "    async function download(id, filename, size) {\n",
+              "      if (!google.colab.kernel.accessAllowed) {\n",
+              "        return;\n",
+              "      }\n",
+              "      const div = document.createElement('div');\n",
+              "      const label = document.createElement('label');\n",
+              "      label.textContent = `Downloading \"${filename}\": `;\n",
+              "      div.appendChild(label);\n",
+              "      const progress = document.createElement('progress');\n",
+              "      progress.max = size;\n",
+              "      div.appendChild(progress);\n",
+              "      document.body.appendChild(div);\n",
+              "\n",
+              "      const buffers = [];\n",
+              "      let downloaded = 0;\n",
+              "\n",
+              "      const channel = await google.colab.kernel.comms.open(id);\n",
+              "      // Send a message to notify the kernel that we're ready.\n",
+              "      channel.send({})\n",
+              "\n",
+              "      for await (const message of channel.messages) {\n",
+              "        // Send a message to notify the kernel that we're ready.\n",
+              "        channel.send({})\n",
+              "        if (message.buffers) {\n",
+              "          for (const buffer of message.buffers) {\n",
+              "            buffers.push(buffer);\n",
+              "            downloaded += buffer.byteLength;\n",
+              "            progress.value = downloaded;\n",
+              "          }\n",
+              "        }\n",
+              "      }\n",
+              "      const blob = new Blob(buffers, {type: 'application/binary'});\n",
+              "      const a = document.createElement('a');\n",
+              "      a.href = window.URL.createObjectURL(blob);\n",
+              "      a.download = filename;\n",
+              "      div.appendChild(a);\n",
+              "      a.click();\n",
+              "      div.remove();\n",
+              "    }\n",
+              "  "
+            ]
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<IPython.core.display.Javascript object>"
+            ],
+            "application/javascript": [
+              "download(\"download_053c5564-29fb-46b4-b15a-e8c091d0a287\", \"Students.csv\", 575)"
+            ]
+          },
+          "metadata": {}
+        }
+      ]
+    }
+  ]
+}
