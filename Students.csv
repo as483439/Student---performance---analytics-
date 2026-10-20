@@ -1,0 +1,26 @@
+# Step 1: Import Pandas
+import pandas as pd
+
+# Step 2: Create student data
+data = {
+    "Student_ID": list(range(1, 21)),
+    "Name": [
+        "Aarav", "Vivaan", "Aditya", "Vihaan", "Arjun",
+        "Reyansh", "Muhammad", "Sai", "Arnav", "Krishna",
+        "Ishaan", "Shaurya", "Atharv", "Ayaan", "Dhruv",
+        "Kabir", "Ritvik", "Anaya", "Diya", "Myra"
+    ],
+    "Department": ["Math"] * 20,
+    "Math": [85,72,90,65,78,88,56,92,70,81,67,95,74,60,83,89,76,91,68,80],
+    "Python": [90,75,85,70,80,92,60,95,72,84,69,93,78,65,86,88,79,94,71,82],
+    "AI": [88,78,92,68,75,90,62,96,74,85,70,91,80,66,84,90,77,93,73,86],
+    "Attendance": [95,88,92,80,85,96,75,98,82,90,78,97,86,79,91,94,84,96,81,89]
+}
+
+# Step 3: Save CSV file
+df = pd.DataFrame(data)
+df.to_csv("/content/Students.csv", index=False)
+
+# Step 4: Verify that the file exists
+print("CSV created:", __import__("os").path.exists("/content/Students.csv"))
+print("Total students:", len(df))
